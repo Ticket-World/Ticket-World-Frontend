@@ -1,0 +1,40 @@
+.round-time-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.no-rounds {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* 회차 버튼 */
+.round-button {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: normal; /* 덜 굵게 */
+}
+
+.round-button:hover {
+  background-color: #f5f5f5;
+}
+
+/* 선택된 회차 */
+.round-button.active {
+  background-color: #a658eb;
+  color: #fff;
+  border: 1px solid #a658eb;
+}
+
+.round-button {
+  font-weight: normal; /* 굵기 낮춤 */
+  cursor: pointer;
+}

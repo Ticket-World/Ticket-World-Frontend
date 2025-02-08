@@ -1,0 +1,72 @@
+/* src/styles/Calendar.css */
+.calendar-container {
+  border: none;
+  padding: 0.5rem;
+  background-color: #fff;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.month-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.month-nav-btn:hover {
+  transform: scale(1.1);
+}
+.month-nav-btn.disabled-nav {
+  color: #ccc;
+  cursor: default;
+  &:hover {
+    transform: none;
+  }
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 0.3rem;
+}
+.weekday-cell {
+  text-align: center;
+  font-weight: bold;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 0.3rem;
+  column-gap: 0.3rem;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 0.6rem 0;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: default;
+}
+
+.calendar-day.empty {
+  background-color: transparent;
+}
+
+.enabled-day {
+  cursor: pointer;
+}
+.disabled-day {
+  cursor: default;
+}
+
+.calendar-day.selected-day {
+  background-color: #a658eb;
+}

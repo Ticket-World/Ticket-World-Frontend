@@ -1,0 +1,123 @@
+/* src/styles/PerformancePage.css */
+.performance-page {
+  display: flex;
+  margin: 2rem auto;
+  max-width: 1200px;
+  gap: 2rem;
+}
+
+.performance-left {
+  flex: 1;
+}
+
+.title-and-rating {
+  margin-bottom: 1rem;
+}
+
+.performance-title {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 0.25rem;
+  font-weight: bold;
+}
+.rating-value {
+  margin-left: 0.3rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.top-section {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.poster-container {
+  flex-shrink: 0;
+}
+.performance-poster {
+  width: 240px;
+  border-radius: 8px;
+  display: block;
+}
+
+.basic-info .info-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+.info-label {
+  min-width: 80px;
+  font-weight: bold;
+  color: #555;
+}
+.info-value {
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.divider {
+  margin: 2rem 0 1rem;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.description-images .desc-img {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.performance-right {
+  width: 320px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #fff;
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+  padding: 1rem;
+}
+
+.between-line {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.rounds-section {
+  margin-bottom: 1.5rem;
+}
+
+.booking-button {
+  width: 100%;
+  background-color: #a658eb;
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.booking-button:hover {
+  background-color: #8c3fd8;
+}
+
+/* 비활성화 버튼 -> cursor: default (일반 커서) */
+.booking-button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
