@@ -1,29 +1,64 @@
-/* src/pages/PaymentPage/PaymentPage.css */
+/* src/pages/PaymentPage.css */
 
 .payment-page {
   max-width: 600px;
   margin: 1rem auto;
   padding: 1rem;
-}
-
-.payment-info-box {
+  background-color: #fefefe;
   border: 1px solid #ddd;
-  padding: 1rem;
+  border-radius: 6px;
+}
+
+.pay-content {
+  display: flex;
+  gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.pay-box {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   background-color: #fff;
+  padding: 0.75rem;
 }
 
-.ticket-info-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 0.75rem;
+.pay-box-title {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
 }
 
-.ticket-info-table th,
-.ticket-info-table td {
-  border: 1px solid #ccc;
-  padding: 6px;
-  text-align: center;
+.ticket-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ticket-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 6px;
+}
+.grade-color-box {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #aaa;
+  border-radius: 2px;
+}
+.ticket-info {
+  display: flex;
+  flex-direction: column;
+}
+.ticket-seat {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+.ticket-grade {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
 }
 
 .discount-list {
@@ -32,24 +67,28 @@
   padding: 0;
   color: #444;
 }
+.no-discount {
+  color: #999;
+  font-style: italic;
+}
 
-.total-amount {
-  margin-top: 0.5rem;
+.pay-summary {
+  margin-bottom: 1rem;
+  text-align: right;
+}
+.pay-amount {
   font-size: 1.1rem;
   color: #222;
 }
-
-.payment-method-box {
+.pay-method-box {
   border: 1px solid #ddd;
   padding: 1rem;
   background-color: #fff;
   margin-bottom: 1rem;
 }
-
 .radio-label {
   margin-right: 1rem;
 }
-
 .pay-button {
   display: inline-block;
   padding: 0.6rem 1.2rem;
@@ -59,11 +98,11 @@
   border-radius: 4px;
   cursor: pointer;
 }
-
 .pay-button:hover {
   background-color: #40a9ff;
 }
 
+/* popup */
 .payment-popup-overlay {
   position: fixed;
   top: 0;
@@ -76,7 +115,6 @@
   align-items: center;
   z-index: 9999;
 }
-
 .payment-popup {
   background-color: #fff;
   padding: 1.2rem;
@@ -84,7 +122,6 @@
   width: 300px;
   text-align: center;
 }
-
 .popup-confirm,
 .popup-cancel {
   margin: 0.4rem;
@@ -93,21 +130,17 @@
   border-radius: 4px;
   cursor: pointer;
 }
-
 .popup-confirm {
   background-color: #1890ff;
   color: #fff;
 }
-
 .popup-confirm:hover {
   background-color: #40a9ff;
 }
-
 .popup-cancel {
   background-color: #ccc;
   color: #333;
 }
-
 .popup-cancel:hover {
   background-color: #bfbfbf;
 }

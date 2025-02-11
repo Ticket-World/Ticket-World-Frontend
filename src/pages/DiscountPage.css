@@ -1,18 +1,28 @@
-/* src/pages/DiscountPage/DiscountPage.css */
+/* src/pages/DiscountPage.css */
 
 .discount-page {
   max-width: 700px;
   margin: 1rem auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
 }
 
 .discount-page h2 {
-  margin-bottom: 1rem;
+  margin-top: 0;
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.discount-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 0.5rem;
 }
 
 .discount-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #ccc;
   text-align: center;
   background-color: #fff;
 }
@@ -21,11 +31,12 @@
 .discount-table td {
   border: 1px solid #ccc;
   padding: 8px;
+  font-size: 0.9rem;
 }
 
 .grade-cell {
   font-weight: bold;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .grade-info {
@@ -34,7 +45,28 @@
   color: #666;
 }
 
+.discount-summary {
+  margin-top: 0.5rem;
+  text-align: right;
+}
+.summary-amount {
+  font-size: 1.1rem;
+  color: #222;
+}
+
 .discount-actions {
   margin-top: 1rem;
   text-align: right;
+}
+
+.confirm-button {
+  background-color: #1890ff;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.confirm-button:hover {
+  background-color: #40a9ff;
 }

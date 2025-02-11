@@ -11,16 +11,22 @@ const SeatAreaLayout = ({ seatAreas, onAreaClick }) => {
     <div className="area-layout">
       <h3>영역 선택</h3>
       <div className="area-grid">
-        {seatAreas.map((ar) => (
-          <div
-            key={ar.id}
-            className="area-box"
-            onClick={() => onAreaClick(ar.id)}
-          >
-            <p className="area-floor">{ar.floorName}</p>
-            <p className="area-name">{ar.areaName}</p>
-          </div>
-        ))}
+        {seatAreas
+          .sort((a, b) => {
+            const keyA = a.floorName + a.areaName;
+            const keyB = b.floorName + b.areaName;
+            return keyA.localeCompare(keyB);
+          })
+          .map((ar) => (
+            <div
+              key={ar.id}
+              className="area-box"
+              onClick={() => onAreaClick(ar.id)}
+            >
+              <p className="area-floor">{ar.floorName}</p>
+              <p className="area-name">{ar.areaName}</p>
+            </div>
+          ))}
       </div>
     </div>
   );

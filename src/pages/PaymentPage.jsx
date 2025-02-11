@@ -4,30 +4,22 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { patchPaymentStart, patchPaymentConfirm } from "../api/performanceAPI";
 import "./PaymentPage.css";
 
+/**
+ * PaymentPage
+ * state:
+ *  - reservationId
+ *  - performanceId
+ *  - paymentItems: [{ seatGradeId, reservationCount, discountId }, ...]
+ *  - totalAmount
+ *  - chosenDiscountsInfo
+ *  - selectedSeats (좌석 상세)
+ *  - seatGradeNameMap
+ */
 const USER_ID = "11111111-2222-3333-4444-555555555555";
 
 const PaymentPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  /**
-   * DiscountPage에서 넘어오는 state 예시:
-   * {
-   *   reservationId: string,
-   *   performanceId: string,
-   *   paymentItems: [
-   *     { seatGradeId, reservationCount, discountId? },
-   *     ...
-   *   ],
-   *   totalAmount: number,
-   *   chosenDiscountsInfo: string[], // ["VIP 3석 ...", ...]
-   *   selectedSeats: [
-   *     { seatPositionId, ticketId, seatGradeId, floorName, areaName, seatName },
-   *     ...
-   *   ],
-   *   seatGradeNameMap: { [gradeId]: { name, price } }
-   * }
-   */
   const {
     reservationId,
     performanceId,
@@ -45,7 +37,6 @@ const PaymentPage = () => {
     return <div className="payment-page">결제 정보가 없습니다.</div>;
   }
 
-  // 결제하기 -> payment/start API
   const handlePaymentStart = async () => {
     try {
       const resp = await patchPaymentStart({
@@ -54,7 +45,6 @@ const PaymentPage = () => {
         paymentMethod: "CREDIT_CARD",
         userId: USER_ID,
       });
-      // resp.data => { paymentId, totalAmount }
       setPopupInfo({
         paymentId: resp.data.paymentId,
         totalAmount: resp.data.totalAmount,
@@ -65,7 +55,6 @@ const PaymentPage = () => {
     }
   };
 
-  // 팝업에서 "결제 완료"
   const handlePaymentConfirm = async () => {
     try {
       const { paymentId } = popupInfo;
@@ -86,31 +75,38 @@ const PaymentPage = () => {
     <div className="payment-page">
       <h2>결제 페이지</h2>
 
-      <div className="payment-info-box">
-        <h3>선택 티켓 정보</h3>
-        {/* 좌석 상세 목록: 층, 영역, 좌석번호, 등급 (등급이름) */}
-        <TicketInfoList
-          selectedSeats={selectedSeats}
-          seatGradeNameMap={seatGradeNameMap}
-        />
+      <div className="pay-content">
+        {/* 좌석 목록 (BookingPage 스타일) */}
+        <div className="pay-box">
+          <h3 className="pay-box-title">선택 티켓</h3>
+          <TicketList
+            selectedSeats={selectedSeats || []}
+            seatGradeNameMap={seatGradeNameMap || {}}
+          />
+        </div>
 
-        <h3>적용된 할인 목록</h3>
-        {chosenDiscountsInfo && chosenDiscountsInfo.length > 0 ? (
-          <ul className="discount-list">
-            {chosenDiscountsInfo.map((desc, idx) => (
-              <li key={idx}>{desc}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>할인 적용 정보 없음</p>
-        )}
+        {/* 할인 목록 */}
+        <div className="pay-box">
+          <h3 className="pay-box-title">할인 내역</h3>
+          {chosenDiscountsInfo && chosenDiscountsInfo.length > 0 ? (
+            <ul className="discount-list">
+              {chosenDiscountsInfo.map((desc, idx) => (
+                <li key={idx}>{desc}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="no-discount">할인 적용 정보 없음</p>
+          )}
+        </div>
+      </div>
 
-        <p className="total-amount">
+      <div className="pay-summary">
+        <p className="pay-amount">
           총 결제 금액: <strong>{totalAmount.toLocaleString()}원</strong>
         </p>
       </div>
 
-      <div className="payment-method-box">
+      <div className="pay-method-box">
         <h4>결제 수단</h4>
         <label className="radio-label">
           <input type="radio" checked readOnly />
@@ -134,46 +130,41 @@ const PaymentPage = () => {
 };
 
 /**
- * 선택 좌석 목록 컴포넌트
- * - 각 좌석: floorName, areaName, seatName, seatGradeId
- * - seatGradeNameMap[ seatGradeId ].name 으로 등급 이름 표시
+ * BookingPage 스타일처럼
+ * seatGradeNameMap => color, name
+ * selectedSeats => [{ floorName, areaName, seatName, seatGradeId }]
  */
-const TicketInfoList = ({ selectedSeats, seatGradeNameMap }) => {
+const TicketList = ({ selectedSeats, seatGradeNameMap }) => {
   if (!selectedSeats || selectedSeats.length === 0) {
-    return <p>선택된 좌석이 없습니다.</p>;
+    return <p>선택된 티켓이 없습니다.</p>;
   }
 
   return (
-    <table className="ticket-info-table">
-      <thead>
-        <tr>
-          <th>층</th>
-          <th>영역</th>
-          <th>좌석번호</th>
-          <th>등급</th>
-        </tr>
-      </thead>
-      <tbody>
-        {selectedSeats.map((seat, idx) => {
-          const gradeObj = seatGradeNameMap?.[seat.seatGradeId];
-          const gradeName = gradeObj?.name || seat.seatGradeId;
-          return (
-            <tr key={idx}>
-              <td>{seat.floorName}</td>
-              <td>{seat.areaName}</td>
-              <td>{seat.seatName}</td>
-              <td>{gradeName}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <ul className="ticket-list">
+      {selectedSeats.map((seat, idx) => {
+        const gradeObj = seatGradeNameMap[seat.seatGradeId] || {};
+        const color = gradeObj.color || "#ccc";
+        const gradeName = gradeObj.name || seat.seatGradeId;
+        const seatText = `${seat.floorName} / ${seat.areaName} / ${seat.seatName}`;
+
+        return (
+          <li key={idx} className="ticket-item">
+            <div
+              className="grade-color-box"
+              style={{ backgroundColor: color }}
+            />
+            <div className="ticket-info">
+              <p className="ticket-seat">{seatText}</p>
+              <p className="ticket-grade">{gradeName}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 };
 
-/**
- * 결제 팝업
- */
+/** 결제 팝업 */
 const PaymentPopup = ({ popupInfo, onConfirm, onCancel }) => {
   const { totalAmount } = popupInfo;
   return (
