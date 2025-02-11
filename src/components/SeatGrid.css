@@ -1,0 +1,49 @@
+/* src/components/SeatGrid.css */
+.seat-grid-labeled {
+  display: grid;
+  gap: 2px;
+  padding: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.label-cell {
+  background-color: #eee;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+}
+.corner-cell {
+  background-color: #ccc;
+}
+
+.seat-cell {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: default;
+  transition: background-color 0.2s;
+}
+
+.empty-cell {
+  background-color: #f9f9f9;
+  border: none;
+}
+
+.seat.available {
+  cursor: pointer;
+}
+.seat.available:hover {
+  outline: 2px solid #72d6b3;
+}
+.seat.unavailable {
+  background-color: #ccc;
+  color: #666;
+}
+.seat.selected {
+  background-color: #3fa7d6;
+  color: #fff;
+}

@@ -1,14 +1,11 @@
-/* src/pages/BookingPage/BookingPage.css */
-
+/* src/pages/BookingPage.css */
 .booking-page {
-  max-width: 900px;
-  margin: 2rem auto;
+  max-width: 1100px;
+  margin: 1rem auto;
   padding: 1rem;
-}
-
-.loading {
-  font-size: 1.2rem;
-  color: #666;
+  background-color: #fefefe;
+  border: 1px solid #ddd;
+  border-radius: 6px;
 }
 
 .error {
@@ -16,93 +13,59 @@
   font-weight: bold;
 }
 
-.performance-brief {
+.top-header {
   margin-bottom: 1rem;
 }
-.performance-brief h3 {
+.title-text {
   margin: 0;
   font-size: 1.4rem;
-}
-.performance-brief p {
-  margin: 0.2rem 0;
-}
-
-.area-select-box {
-  margin-bottom: 1rem;
-}
-
-.single-area-info {
-  margin-bottom: 1rem;
-}
-
-.seat-area {
-  margin: 1rem 0;
-}
-
-/* 라벨 포함 좌석 그리드 */
-.seat-grid-labeled {
-  display: grid;
-  gap: 4px;
-  background-color: #eee;
-  padding: 0.5rem;
-  border-radius: 8px;
-}
-
-.label-cell {
-  background-color: #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-weight: bold;
-  color: #333;
 }
-.corner-cell {
-  background-color: #ccc;
-}
-.col-label {
-}
-.row-label {
-}
-
-.seat-cell {
-  width: 50px;
-  height: 50px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fafafa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.8rem;
-  text-align: center;
-  cursor: default;
-}
-.empty-cell {
-  background-color: #f9f9f9;
-  border: none;
-}
-
-.seat.available {
-  cursor: pointer;
-  background-color: #fff;
-}
-.seat.available:hover {
-  background-color: #a8e6cf;
-}
-.seat.unavailable {
-  background-color: #ccc;
+.sub-text {
+  margin: 0.2rem 0 0;
   color: #666;
-}
-.seat.selected {
-  background-color: #3fa7d6;
-  color: #fff;
-  cursor: pointer;
+  font-size: 0.9rem;
 }
 
-.selected-seats {
-  margin: 1rem 0;
+.main-layout {
+  display: flex;
+  gap: 1rem;
+}
+
+/* 왼쪽, 오른쪽 */
+.left-side {
+  flex: 1;
+}
+.right-side {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 좌석 box */
+.seat-box {
   border: 1px solid #ddd;
-  padding: 0.8rem;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.seat-box-header {
+  display: flex;
+  justify-content: flex-start;
+}
+.back-button {
+  background-color: #eee;
+  border: none;
+  color: #333;
+  padding: 0.4rem 0.8rem;
   border-radius: 4px;
-  background-color: #fdfdfd;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.back-button:hover {
+  background-color: #ccc;
 }

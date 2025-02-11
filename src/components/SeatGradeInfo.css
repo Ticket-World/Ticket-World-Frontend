@@ -1,0 +1,38 @@
+/* src/components/SeatGradeInfo.css */
+.seat-grade-info {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 0.8rem;
+}
+
+.seat-grade-info h4 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.grade-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.grade-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.grade-color-box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}
+
+.price-info {
+  color: #666;
+  font-size: 0.85rem;
+}

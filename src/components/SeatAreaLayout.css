@@ -1,0 +1,49 @@
+/* src/components/SeatAreaLayout.css */
+
+.area-layout {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 0.8rem;
+}
+
+.area-layout h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.area-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.area-box {
+  flex: 0 0 120px;
+  height: 80px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fafafa;
+  cursor: pointer;
+  text-align: center;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+.area-box:hover {
+  background-color: #f0f0f0;
+}
+
+.area-floor {
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+.area-name {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}

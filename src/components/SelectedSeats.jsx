@@ -1,22 +1,49 @@
-// src/pages/BookingPage/SelectedSeats.jsx
+// src/components/SelectedSeats.jsx
 import React from "react";
+import "./SelectedSeats.css";
 
-const SelectedSeats = ({ selectedTicketIds, maxCount, onConfirm }) => {
+/**
+ * props:
+ *  - selectedSeats: [ { seatGradeId, floorName, areaName, seatName, ...} ]
+ *  - seatGradeMap: { gradeId -> { name, price, color } }
+ *  - maxCount
+ *  - onConfirm()
+ */
+const SelectedSeats = ({
+  selectedSeats,
+  seatGradeMap,
+  maxCount,
+  onConfirm,
+}) => {
   return (
-    <div className="selected-seats">
+    <div className="selected-seats-panel">
       <h4>
-        선택된 좌석 ({selectedTicketIds.length} / {maxCount})
+        선택 좌석 ({selectedSeats.length} / {maxCount})
       </h4>
-      {selectedTicketIds.length === 0 ? (
-        <p>선택된 좌석 없음</p>
+      {selectedSeats.length === 0 ? (
+        <p className="no-seat-text">선택된 좌석 없음</p>
       ) : (
-        <ul>
-          {selectedTicketIds.map((tid) => (
-            <li key={tid}>ticketId: {tid}</li>
-          ))}
+        <ul className="selected-seat-list">
+          {selectedSeats.map((s, idx) => {
+            const gInfo = seatGradeMap[s.seatGradeId];
+            const color = gInfo?.color || "#ccc";
+            // "1층 / F-1구역 / 3열14번" 형식
+            const seatLabel = `${s.floorName} / ${s.areaName} / ${s.seatName}`;
+            return (
+              <li key={idx} className="seat-item">
+                <div
+                  className="grade-color-box"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="seat-label">{seatLabel}</span>
+              </li>
+            );
+          })}
         </ul>
       )}
-      <button onClick={onConfirm}>좌석 선택</button>
+      <button className="confirm-seat-button" onClick={onConfirm}>
+        좌석 선택 완료
+      </button>
     </div>
   );
 };
