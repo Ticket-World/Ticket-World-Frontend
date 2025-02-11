@@ -1,0 +1,113 @@
+/* src/pages/PaymentPage/PaymentPage.css */
+
+.payment-page {
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 1rem;
+}
+
+.payment-info-box {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+}
+
+.ticket-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.75rem;
+}
+
+.ticket-info-table th,
+.ticket-info-table td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+}
+
+.discount-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #444;
+}
+
+.total-amount {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.payment-method-box {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  background-color: #fff;
+  margin-bottom: 1rem;
+}
+
+.radio-label {
+  margin-right: 1rem;
+}
+
+.pay-button {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pay-button:hover {
+  background-color: #40a9ff;
+}
+
+.payment-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.payment-popup {
+  background-color: #fff;
+  padding: 1.2rem;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.popup-confirm,
+.popup-cancel {
+  margin: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popup-confirm {
+  background-color: #1890ff;
+  color: #fff;
+}
+
+.popup-confirm:hover {
+  background-color: #40a9ff;
+}
+
+.popup-cancel {
+  background-color: #ccc;
+  color: #333;
+}
+
+.popup-cancel:hover {
+  background-color: #bfbfbf;
+}

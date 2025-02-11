@@ -6,47 +6,47 @@ import Calendar from "../components/Calendar";
 import RoundTimeList from "../components/RoundTimeList";
 import { fetchPerformanceDetail } from "../api/performanceAPI";
 import "./PerformancePage.css";
-import { AiFillStar } from "react-icons/ai";
 
 const PerformancePage = () => {
   const { performanceId } = useParams();
   const navigate = useNavigate();
 
+  // 달력 상태
+  const [calendarYear, setCalendarYear] = useState(2025);
+  const [calendarMonth, setCalendarMonth] = useState(0); // JS에서 0=1월
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedRoundId, setSelectedRoundId] = useState(null);
+
+  // 공연 정보, 로딩/에러
   const [performance, setPerformance] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 달력/회차
-  const [calendarYear, setCalendarYear] = useState(2025);
-  const [calendarMonth, setCalendarMonth] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedRoundId, setSelectedRoundId] = useState(null);
-
-  // 임시 별점
-  // const [rating] = useState(9.7);
-
-  // 최소 예매 오픈시간
+  // 예매 오픈 시간
   const [minResStartTime, setMinResStartTime] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetchPerformanceDetail(performanceId);
-        const data = response.data;
+        const resp = await fetchPerformanceDetail(performanceId);
+        const data = resp.data;
         setPerformance(data);
 
-        // 예약 오픈시간
+        // 예매 오픈 시간 (서버 month는 1-12 → JS Date는 0-11)
         if (data.minimumReservationStartTime) {
           const [y, m, d, hh, mm] = data.minimumReservationStartTime;
+          // m - 1 필요
           setMinResStartTime(new Date(y, m - 1, d, hh, mm));
         }
 
-        // 회차 자동 선택
+        // 회차가 존재하면 가장 빠른 회차를 자동 선택
         if (data.rounds.length > 0) {
-          const sorted = data.rounds
+          // 시간 순 정렬
+          const sortedRounds = data.rounds
             .map((r) => {
               const [yy, mm, dd, h, mn] = r.roundStartTime;
+              // 여기서도 month-1
               return {
                 ...r,
                 dateObj: new Date(yy, mm - 1, dd, h, mn),
@@ -54,19 +54,24 @@ const PerformancePage = () => {
             })
             .sort((a, b) => a.dateObj - b.dateObj);
 
-          const earliest = sorted[0];
-          const [ey, em, ed] = earliest.roundStartTime;
+          // 첫 번째(가장 빠른) 회차
+          const earliest = sortedRounds[0];
+          const [ey, em, ed] = earliest.roundStartTime; // 서버 값(1~12)
+
+          // 실제 JS에서 쓸 때 month-1
           setSelectedRoundId(earliest.id);
           setSelectedDate(new Date(ey, em - 1, ed));
 
+          // 달력도 동일
           setCalendarYear(ey);
-          setCalendarMonth(em - 1);
+          setCalendarMonth(em - 1); // 0=1월
         }
       } catch (err) {
         setError(err);
       }
       setLoading(false);
     };
+
     fetchData();
   }, [performanceId]);
 
@@ -88,12 +93,9 @@ const PerformancePage = () => {
     seatGrades = [],
   } = performance;
 
-  // InfoRow: null, 빈 문자열, 공백("   ") => 스킵
+  // null/빈문자/공백 처리
   const InfoRow = ({ label, value }) => {
-    // value가 null이거나, trim()했을 때 빈 문자열이면 렌더링 스킵
-    if (!value || value.trim() === "") {
-      return null;
-    }
+    if (!value || value.trim() === "") return null;
     return (
       <div className="info-row">
         <div className="info-label">{label}</div>
@@ -102,34 +104,51 @@ const PerformancePage = () => {
     );
   };
 
-  const formatDate = ([y, m, d]) =>
-    `${y}.${String(m).padStart(2, "0")}.${String(d).padStart(2, "0")}`;
+  // YYYY.MM.DD (month는 서버에서 받은 그대로 +1 필요)
+  const formatDate = ([y, m, d]) => {
+    const mm = String(m).padStart(2, "0"); // 서버가 1-based
+    const dd = String(d).padStart(2, "0");
+    return `${y}.${mm}.${dd}`;
+  };
 
-  // 장르 매핑
+  // 장르 치환
   const genreMap = { MUSICAL: "뮤지컬", CONCERT: "콘서트" };
   const genreKor = genreMap[genre] || genre;
 
-  // 날짜별 회차
-  const roundsByDate = rounds.reduce((acc, r) => {
-    const [yy, mm, dd, hh, mn] = r.roundStartTime;
-    const key = `${yy}-${mm}-${dd}`;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push({
-      id: r.id,
-      dateObj: new Date(yy, mm - 1, dd, hh, mn),
-      time: `${String(hh).padStart(2, "0")}:${String(mn).padStart(2, "0")}`,
-    });
-    return acc;
-  }, {});
+  // rounds를 먼저 시간 순 정렬 → 날짜별로 그룹화
+  // 서버 month가 1~12
+  const roundsByDate = [...rounds]
+    .sort((a, b) => {
+      const [ay, am, ad, ah, amin] = a.roundStartTime;
+      const [by, bm, bd, bh, bmin] = b.roundStartTime;
+      // month-1
+      const dateA = new Date(ay, am - 1, ad, ah, amin);
+      const dateB = new Date(by, bm - 1, bd, bh, bmin);
+      return dateA - dateB;
+    })
+    .reduce((acc, r) => {
+      const [yy, mm, dd, hh, mn] = r.roundStartTime; // 1-based month
+      const key = `${yy}-${mm}-${dd}`; // 그룹화 key
+      if (!acc[key]) acc[key] = [];
 
+      acc[key].push({
+        id: r.id,
+        dateObj: new Date(yy, mm - 1, dd, hh, mn),
+        time: `${String(hh).padStart(2, "0")}:${String(mn).padStart(2, "0")}`,
+      });
+      return acc;
+    }, {});
+
+  // 달력에서 날짜 선택 (JS Date: month=0~11)
   const handleDateSelect = (date) => {
     setSelectedDate(date);
+    // key = `YYYY-(month+1)-(date.getDate())` (서버에선 1-based month)
     const key = `${date.getFullYear()}-${
       date.getMonth() + 1
     }-${date.getDate()}`;
     const daily = roundsByDate[key] || [];
     if (daily.length > 0) {
-      daily.sort((a, b) => a.dateObj - b.dateObj);
+      // 이미 시간 순
       setSelectedRoundId(daily[0].id);
     } else {
       setSelectedRoundId(null);
@@ -140,26 +159,26 @@ const PerformancePage = () => {
     setSelectedRoundId(roundId);
   };
 
-  const handleBooking = () => {
+  const navigateBooking = () => {
     if (!selectedRoundId) return;
-    navigate(`/booking/${selectedRoundId}`);
+    navigate(`/booking/${performanceId}?roundId=${selectedRoundId}`);
   };
 
-  // 종료 / 오픈예정
+  // 종료/오픈 예정
   const now = new Date();
   const hasNoRounds = rounds.length === 0;
   const isOpenSoon = hasNoRounds && minResStartTime && minResStartTime > now;
   const isEndedConcert =
     hasNoRounds && (!minResStartTime || minResStartTime <= now);
 
-  // 예매 버튼
+  // 예매 버튼 처리
   let bookingButtonText = "예매하기";
   let bookingButtonStyle = {};
   let bookingButtonDisabled = false;
 
   if (isEndedConcert) {
     bookingButtonText = "종료된 공연입니다.";
-    bookingButtonStyle = { backgroundColor: "#ccc", cursor: "default" }; // 일반 커서
+    bookingButtonStyle = { backgroundColor: "#ccc", cursor: "default" };
     bookingButtonDisabled = true;
   } else if (isOpenSoon) {
     bookingButtonStyle = { backgroundColor: "#ccc", cursor: "default" };
@@ -176,21 +195,14 @@ const PerformancePage = () => {
     }
   }
 
-  // 공연 상세 정보 이미지가 없으면 이 섹션 숨김
+  // 공연 상세 이미지
   const hasDescriptionImages = descriptionImageUrls.length > 0;
 
   return (
     <div className="performance-page">
       <div className="performance-left">
-        <div className="title-and-rating">
-          <h2 className="performance-title">{title}</h2>
-          {/* <div className="star-rating">
-            {[...Array(5)].map((_, i) => (
-              <AiFillStar key={i} color="#FFC107" />
-            ))}
-            <span className="rating-value">{rating}</span>
-          </div> */}
-        </div>
+        <h2 className="performance-title">{title}</h2>
+        <br />
 
         <div className="top-section">
           <div className="poster-container">
@@ -210,17 +222,13 @@ const PerformancePage = () => {
             <InfoRow label="관람연령" value={ageLimit} />
             <InfoRow label="장르" value={genreKor} />
 
-            {/* 가격 정보 */}
+            {/* 가격 */}
             {seatGrades.length > 0 && (
               <div className="info-row">
                 <div className="info-label">가격</div>
                 <div className="info-value">
                   {seatGrades.map((grade) => {
-                    // 등급 이름이 없거나 공백이면 스킵
-                    if (!grade.name || grade.name.trim() === "") {
-                      return null;
-                    }
-                    // price가 있다면 굵게 표현
+                    if (!grade.name || grade.name.trim() === "") return null;
                     if (grade.price) {
                       return (
                         <div key={grade.id}>
@@ -229,7 +237,6 @@ const PerformancePage = () => {
                         </div>
                       );
                     } else {
-                      // price 없는 경우
                       return <div key={grade.id}>{grade.name}</div>;
                     }
                   })}
@@ -258,6 +265,7 @@ const PerformancePage = () => {
       </div>
 
       <div className="performance-right">
+        {/* 달력/회차 표시 (공연 종료나 오픈 전 제외) */}
         {!(isEndedConcert || isOpenSoon) && (
           <>
             <div className="calendar-section">
@@ -277,13 +285,8 @@ const PerformancePage = () => {
               {selectedDate ? (
                 <RoundTimeList
                   selectedRoundId={selectedRoundId}
-                  rounds={
-                    roundsByDate[
-                      `${selectedDate.getFullYear()}-${
-                        selectedDate.getMonth() + 1
-                      }-${selectedDate.getDate()}`
-                    ] || []
-                  }
+                  // 해당 날짜의 회차 목록
+                  rounds={getDailyRounds(roundsByDate, selectedDate)}
                   onRoundSelect={handleRoundSelect}
                 />
               ) : (
@@ -295,7 +298,7 @@ const PerformancePage = () => {
 
         <button
           className="booking-button"
-          onClick={handleBooking}
+          onClick={navigateBooking}
           disabled={bookingButtonDisabled}
           style={bookingButtonStyle}
         >
@@ -305,5 +308,16 @@ const PerformancePage = () => {
     </div>
   );
 };
+
+/**
+ * 날짜 객체(JS Date) -> 키를 만들 때 (year)-(month+1)-(date)
+ * month+1 하는 이유: JS Date(0-11) → 서버(1-12) 기반
+ */
+function getDailyRounds(roundsByDate, dateObj) {
+  const key = `${dateObj.getFullYear()}-${
+    dateObj.getMonth() + 1
+  }-${dateObj.getDate()}`;
+  return roundsByDate[key] || [];
+}
 
 export default PerformancePage;

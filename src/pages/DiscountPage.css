@@ -1,0 +1,40 @@
+/* src/pages/DiscountPage/DiscountPage.css */
+
+.discount-page {
+  max-width: 700px;
+  margin: 1rem auto;
+}
+
+.discount-page h2 {
+  margin-bottom: 1rem;
+}
+
+.discount-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: #fff;
+}
+
+.discount-table th,
+.discount-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.grade-cell {
+  font-weight: bold;
+  vertical-align: top;
+}
+
+.grade-info {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.discount-actions {
+  margin-top: 1rem;
+  text-align: right;
+}
