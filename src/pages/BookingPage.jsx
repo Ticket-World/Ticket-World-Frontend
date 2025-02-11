@@ -196,6 +196,22 @@ const BookingPage = () => {
     }
   };
 
+  // 에러 후 다시 좌석 상태 로드
+  const reloadSelectedAreaState = async () => {
+    if (!selectedArea) return;
+    try {
+      const resState = await fetchReservationState(roundId, selectedArea.id);
+      const map = {};
+      resState.data.tickets.forEach((t) => {
+        map[t.seatPositionId] = { ticketId: t.id, canReserve: t.canReserve };
+      });
+      setReservationMap(map);
+    } catch (err) {
+      console.error("reloadSelectedAreaState error:", err);
+      alert("좌석 상태 재로드 중 오류 발생");
+    }
+  };
+
   // "좌석 선택 완료"
   const handleSeatSelection = async () => {
     if (selectedTicketIds.length === 0) {
@@ -228,7 +244,18 @@ const BookingPage = () => {
         },
       });
     } catch (err) {
-      setError(err);
+      // === New error handling for 400 ===
+      if (err.response && err.response.status === 400) {
+        const { code, message } = err.response.data || {};
+        alert(`[${code}] ${message}`);
+        // 티켓 초기화
+        setSelectedTicketIds([]);
+        setSelectedSeats([]);
+        // 다시 좌석 상태 로드
+        await reloadSelectedAreaState();
+      } else {
+        alert("좌석 선택 중 오류 발생");
+      }
     }
   };
 
